@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Элла Сидорова](https://up.htmlacademy.ru/javascript/20/user/147338).
-* Наставник: `Неизвестно`.
+* Наставник: [Вадим Новаш](https://up.htmlacademy.ru/javascript/20/user/8589).
 
 ---
 
