@@ -52,7 +52,7 @@ function getMessages(count, array) {
   return messages;
 }
 
-function getArrComments(count) {
+function createArrayOfComments(count) {
   var arrComments = [];
   for (var i = 0; i < count; i += 1) {
     var objectComment = {
@@ -65,14 +65,14 @@ function getArrComments(count) {
   return arrComments;
 }
 
-function getArrPictures(count) {
+function createArrayOfPictures(count) {
   var arrPictures = [];
   for (var i = 0; i < count; i += 1) {
     var pictureObject = {
       url: 'photos/' + (i + 1) + '.jpg',
       description: DESCRIPTIONS[getRandomNumber(0, DESCRIPTIONS.length - 1)],
       likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
-      comments: getArrComments(getRandomNumber(0, COUNT_PICTURES))
+      comments: createArrayOfComments(getRandomNumber(0, COUNT_PICTURES))
     };
     arrPictures.push(pictureObject);
   }
@@ -91,4 +91,4 @@ function renderPictures(arrObjects, container) {
   container.appendChild(fragment);
 }
 
-renderPictures(getArrPictures(COUNT_PICTURES), picturesBlock);
+renderPictures(createArrayOfPictures(COUNT_PICTURES), picturesBlock);
