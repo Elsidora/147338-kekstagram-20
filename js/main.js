@@ -57,7 +57,7 @@ function createArrayOfComments(count) {
   for (var i = 0; i < count; i += 1) {
     var objectComment = {
       avatar: 'img/avatar-' + getRandomNumber(AVATAR_MIN, AVATAR_MAX) + '.svg',
-      message: getMessages(getRandomNumber(0, USERS_MESSAGES.length - 1), USERS_MESSAGES),
+      message: getMessages(AVATAR_MIN, USERS_MESSAGES),
       name: NAMES[getRandomNumber(0, NAMES.length - 1)]
     };
     arrComments.push(objectComment);
@@ -91,4 +91,62 @@ function renderPictures(arrObjects, container) {
   container.appendChild(fragment);
 }
 
+// module3-task3
+
+var AVATAR_WIDTH = 35;
+var AVATAR_HEIGHT = 35;
+var body = document.querySelector('body');
+
+var bigPicture = document.querySelector('.big-picture');
+var bigPictureImg = bigPicture.querySelector('.big-picture__img img');
+var bigPictureLikesCount = bigPicture.querySelector('.likes-count');
+var bigPictureCommentsCount = bigPicture.querySelector('.comments-count');
+var bigPictureSocialComments = bigPicture.querySelector('.social__comments');
+var bigPictureSocialCaption = bigPicture.querySelector('.social__caption');
+
+function getBigPictureComments(blockComments, picture) {
+  blockComments.innerHTML = '';
+
+  picture.comments.forEach(function (item) {
+
+    var comment = document.createElement('li');
+    comment.classList.add('social__comment');
+
+    var avatar = document.createElement('img');
+    avatar.classList.add('social__picture');
+    avatar.src = item.avatar;
+    avatar.alt = 'Аватар ' + item.name;
+    avatar.width = AVATAR_WIDTH;
+    avatar.height = AVATAR_HEIGHT;
+
+    var text = document.createElement('p');
+    text.classList.add('social__text');
+    text.textContent = item.message;
+
+    comment.appendChild(avatar);
+    comment.appendChild(text);
+
+    blockComments.appendChild(comment);
+
+  });
+
+}
+
+function showBigPicture(image) {
+
+  bigPictureImg.src = image.url;
+  bigPictureLikesCount.textContent = image.likes;
+  bigPictureCommentsCount.textContent = image.comments.length;
+  bigPictureSocialCaption.textContent = image.description;
+
+  getBigPictureComments(bigPictureSocialComments, image);
+
+  bigPicture.querySelector('.social__comment-count').classList.add('hidden');
+  bigPicture.querySelector('.comments-loader').classList.add('hidden');
+
+  body.classList.add('.modal-open');
+  bigPicture.classList.remove('hidden');
+}
+
+showBigPicture(createArrayOfPictures(COUNT_PICTURES)[0]);
 renderPictures(createArrayOfPictures(COUNT_PICTURES), picturesBlock);
