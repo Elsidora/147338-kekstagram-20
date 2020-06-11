@@ -129,7 +129,6 @@ function getBigPictureComments(blockComments, picture) {
     blockComments.appendChild(comment);
 
   });
-
 }
 
 function showBigPicture(image) {
@@ -144,9 +143,78 @@ function showBigPicture(image) {
   bigPicture.querySelector('.social__comment-count').classList.add('hidden');
   bigPicture.querySelector('.comments-loader').classList.add('hidden');
 
-  body.classList.add('.modal-open');
+  body.classList.add('modal-open');
+
+  // uploadFile.removeEventListener('change', onUploadFileChange);
   bigPicture.classList.remove('hidden');
+
+  document.addEventListener('keydown', onEscapePress);
+  bigPictureCancel.addEventListener('click', onBigPictureCancelClick);
 }
+
+// module4-task2
+
+var bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
+
+var form = picturesBlock.querySelector('.img-upload__form');
+var uploadFile = form.querySelector('#upload-file');
+var imgUploadOverlay = form.querySelector('.img-upload__overlay');
+var imgUploadCancel = imgUploadOverlay.querySelector('.img-upload__cancel');
+
+function onBigPictureCancelClick(evt) {
+  evt.preventDefault();
+  body.classList.remove('modal-open');
+  closeBigPicture();
+}
+
+function onEscapePress(evt) {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    if (!bigPicture.classList.contains('hidden')) {
+      closeBigPicture();
+    } else if (!imgUploadOverlay.classList.contains('hidden')) {
+      closeFormEditPhoto();
+    }
+    body.classList.remove('modal-open');
+    document.removeEventListener('keydown', onEscapePress);
+  }
+}
+
+function closeBigPicture() {
+  bigPicture.classList.add('hidden');
+}
+
+function onUploadFileChange(evt) {
+  evt.preventDefault();
+  openFormEditPhoto();
+}
+
+function openFormEditPhoto() {
+  imgUploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', onEscapePress);
+
+  body.classList.add('modal-open');
+  // uploadFile.removeEventListener('change', onUploadFileChange);
+  uploadFile.blur();
+}
+
+function closeFormEditPhoto() {
+  imgUploadOverlay.classList.add('hidden');
+  uploadFile.value = '';
+  // form.reset();
+}
+
+function onImgUploadCancelClick(evt) {
+  evt.preventDefault();
+  closeFormEditPhoto();
+  body.classList.remove('modal-open');
+}
+
+imgUploadCancel.addEventListener('click', onImgUploadCancelClick);
+
+uploadFile.addEventListener('change', onUploadFileChange);
+
 
 showBigPicture(createArrayOfPictures(COUNT_PICTURES)[0]);
 renderPictures(createArrayOfPictures(COUNT_PICTURES), picturesBlock);
+
