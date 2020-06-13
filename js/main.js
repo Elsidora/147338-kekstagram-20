@@ -1,5 +1,5 @@
 'use strict';
-var COUNT_PICTURES = 25;
+var PICTURES_COUNT = 25;
 
 var LIKES_MIN = 15;
 
@@ -67,12 +67,12 @@ function createArrayOfComments(count) {
 
 function createArrayOfPictures(count) {
   var arrPictures = [];
-  for (var i = 0; i < count; i += 1) {
+  for (var i = 1; i <= count; i += 1) {
     var pictureObject = {
-      url: 'photos/' + (i + 1) + '.jpg',
+      url: 'photos/' + i + '.jpg',
       description: DESCRIPTIONS[getRandomNumber(0, DESCRIPTIONS.length - 1)],
       likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
-      comments: createArrayOfComments(getRandomNumber(0, COUNT_PICTURES))
+      comments: createArrayOfComments(getRandomNumber(0, PICTURES_COUNT))
     };
     arrPictures.push(pictureObject);
   }
@@ -83,9 +83,16 @@ function renderPictures(arrObjects, container) {
   var fragment = document.createDocumentFragment();
   arrObjects.forEach(function (item) {
     var pictureElement = pictureTemplate.cloneNode(true);
+
     pictureElement.querySelector('.picture__img').src = item.url;
     pictureElement.querySelector('.picture__comments').textContent = item.comments.length;
     pictureElement.querySelector('.picture__likes').textContent = item.likes;
+
+    pictureElement.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      showBigPicture(item);
+    });
+
     fragment.appendChild(pictureElement);
   });
   container.appendChild(fragment);
@@ -249,14 +256,14 @@ function onValidateHashtags(evt) {
       hashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
       break;
     }
-    if (!arrayOfHashtags[i].match("^#[A-Za-z0-9]+$")) {
+    if (!arrayOfHashtags[i].match('^#[A-Za-z0-9]+$')) {
       hashtags.setCustomValidity('Cтрока после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т.д.');
       break;
     }
     hashtags.setCustomValidity('');
 
   }
-  //hashtags.setCustomValidity('');
+  // hashtags.setCustomValidity('');
 }
 
 hashtags.addEventListener('input', onValidateHashtags);
@@ -274,5 +281,21 @@ function onHashtagsBlur(evt) {
 hashtags.addEventListener('blur', onHashtagsBlur);
 
 
-showBigPicture(createArrayOfPictures(COUNT_PICTURES)[0]);
-renderPictures(createArrayOfPictures(COUNT_PICTURES), picturesBlock);
+// module4-task3
+
+var textDescription = form.querySelector('.text__description');
+
+function onTextDescriptionFocus(evt) {
+  evt.preventDefault();
+  document.removeEventListener('keydown', onEscapePress);
+}
+textDescription.addEventListener('focus', onTextDescriptionFocus);
+
+function onTextDescriptionBlur(evt) {
+  evt.preventDefault();
+  document.addEventListener('keydown', onEscapePress);
+}
+textDescription.addEventListener('blur', onTextDescriptionBlur);
+
+// showBigPicture(createArrayOfPictures(PICTURES_COUNT)[0]);
+renderPictures(createArrayOfPictures(PICTURES_COUNT), picturesBlock);
