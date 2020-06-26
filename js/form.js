@@ -10,7 +10,9 @@
   var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
   var hashtags = imgUploadOverlay.querySelector('.text__hashtags');
   var textDescription = imgUploadOverlay.querySelector('.text__description');
-
+  var imgUploadEffects = imgUploadOverlay.querySelector('.img-upload__effects');
+  var scaleSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
+  var scaleBigger = imgUploadOverlay.querySelector('.scale__control--bigger');
 
   function onEscapePress(evt) {
     window.util.isEscapeEvent(evt, closeFormEditPhoto);
@@ -24,7 +26,10 @@
 
     body.classList.add('modal-open');
     imgUploadCancel.addEventListener('click', onImgUploadCancelClick);
-    effectLevelPin.addEventListener('mousedown', window.pin.movePin);
+    scaleSmaller.addEventListener('click', window.size.minusClick);
+    scaleBigger.addEventListener('click', window.size.plusClick);
+    imgUploadEffects.addEventListener('click', window.effects.radioClick);
+    effectLevelPin.addEventListener('mousedown', window.effects.movePin);
     hashtags.addEventListener('input', window.hashtags.validate);
 
     hashtags.addEventListener('focus', onHashtagsFocus);
