@@ -2,8 +2,11 @@
 
 (function () {
 
-  var AVATAR_WIDTH = 35;
-  var AVATAR_HEIGHT = 35;
+  var Avatar = {
+    WIDTH: 35,
+    HEIGHT: 35
+  };
+
   var body = document.querySelector('body');
 
   var bigPicture = document.querySelector('.big-picture');
@@ -27,8 +30,8 @@
       avatar.classList.add('social__picture');
       avatar.src = item.avatar;
       avatar.alt = 'Аватар ' + item.name;
-      avatar.width = AVATAR_WIDTH;
-      avatar.height = AVATAR_HEIGHT;
+      avatar.width = Avatar.WIDTH;
+      avatar.height = Avatar.HEIGHT;
 
       var text = document.createElement('p');
       text.classList.add('social__text');

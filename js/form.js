@@ -79,8 +79,4 @@
 
   uploadFile.addEventListener('change', onUploadFileChange);
 
-  window.form = {
-    openForm: openFormEditPhoto
-  };
-
 })();
