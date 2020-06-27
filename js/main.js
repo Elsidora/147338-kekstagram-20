@@ -3,13 +3,15 @@
 (function () {
   var PICTURES_COUNT = 25;
 
-  var LIKES_MIN = 15;
+  var Likes = {
+    COUNT_MIN: 15,
+    COUNT_MAX: 200
+  };
 
-  var LIKES_MAX = 200;
-
-  var AVATAR_MIN = 1;
-
-  var AVATAR_MAX = 6;
+  var Avatar = {
+    COUNT_MIN: 1,
+    COUNT_MAX: 6
+  };
 
   var DESCRIPTIONS = [
     'Люблю отдыхать!',
@@ -58,8 +60,8 @@
     var arrComments = [];
     for (var i = 0; i < count; i += 1) {
       var objectComment = {
-        avatar: 'img/avatar-' + getRandomNumber(AVATAR_MIN, AVATAR_MAX) + '.svg',
-        message: getMessages(AVATAR_MIN, USERS_MESSAGES),
+        avatar: 'img/avatar-' + getRandomNumber(Avatar.COUNT_MIN, Avatar.COUNT_MAX) + '.svg',
+        message: getMessages(Avatar.COUNT_MIN, USERS_MESSAGES),
         name: NAMES[getRandomNumber(0, NAMES.length - 1)]
       };
       arrComments.push(objectComment);
@@ -73,7 +75,7 @@
       var pictureObject = {
         url: 'photos/' + i + '.jpg',
         description: DESCRIPTIONS[getRandomNumber(0, DESCRIPTIONS.length - 1)],
-        likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
+        likes: getRandomNumber(Likes.COUNT_MIN, Likes.COUNT_MAX),
         comments: createArrayOfComments(getRandomNumber(0, PICTURES_COUNT))
       };
       arrPictures.push(pictureObject);
