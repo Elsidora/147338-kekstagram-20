@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  /*
   var PICTURES_COUNT = 25;
 
   var Likes = {
@@ -32,10 +33,6 @@
   ];
 
   var NAMES = ['Богдан', 'Лукерья', 'Изяслав', 'Акулина', 'Елисей', 'Ефимия'];
-
-  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-
-  var picturesBlock = document.querySelector('.pictures');
 
   function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -82,6 +79,11 @@
     }
     return arrPictures;
   }
+  */
+
+  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
+  var picturesBlock = document.querySelector('.pictures');
 
   function renderPictures(arrObjects, container) {
     var fragment = document.createDocumentFragment();
@@ -102,5 +104,19 @@
     container.appendChild(fragment);
   }
 
-  renderPictures(createArrayOfPictures(PICTURES_COUNT), picturesBlock);
+  function onSuccess(pictures) {
+    renderPictures(pictures, picturesBlock);
+  }
+
+  function onError(errorMessage) {
+    var main = document.querySelector('main');
+    var errorBlock = document.createElement('div');
+    errorBlock.classList.add('error-block');
+    errorBlock.textContent = errorMessage;
+    main.insertAdjacentElement('afterbegin', errorBlock);
+  }
+
+  window.load.download(onSuccess, onError);
+
+  // renderPictures(createArrayOfPictures(PICTURES_COUNT), picturesBlock);
 })();
