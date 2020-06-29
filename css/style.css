@@ -41,6 +41,17 @@ main {
   position: relative;
 }
 
+.error-block {
+  position: absolute;
+  z-index: 100;
+  margin: 0 auto;
+  text-align: center;
+  background-color: red;
+  left: 0;
+  right: 0;
+  font-size: 30px;
+}
+
 .content-box-component {
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
