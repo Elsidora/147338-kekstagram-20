@@ -2,10 +2,14 @@
 
 (function () {
 
+  var TIMEOUT = 3000;
   var body = document.querySelector('body');
   var form = body.querySelector('.img-upload__form');
   var uploadFile = form.querySelector('#upload-file');
   var imgUploadOverlay = form.querySelector('.img-upload__overlay');
+  var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
+  var effectsRadio = imgUploadOverlay.querySelectorAll('.effects__radio');
+  var imgUploadEffectLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
   var imgUploadCancel = imgUploadOverlay.querySelector('.img-upload__cancel');
   var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
   var hashtags = imgUploadOverlay.querySelector('.text__hashtags');
@@ -19,6 +23,12 @@
     body.classList.remove('modal-open');
     document.removeEventListener('keydown', onEscapePress);
   }
+  function defaultStyle() {
+    imgUploadPreview.style = '';
+    imgUploadPreview.className = '';
+    effectsRadio[0].checked = true;
+    imgUploadEffectLevel.classList.add('hidden');
+  }
 
   function openFormEditPhoto() {
     imgUploadOverlay.classList.remove('hidden');
@@ -29,13 +39,14 @@
     scaleSmaller.addEventListener('click', window.size.minusClick);
     scaleBigger.addEventListener('click', window.size.plusClick);
     imgUploadEffects.addEventListener('click', window.effects.radioClick);
-    effectLevelPin.addEventListener('mousedown', window.effects.movePin);
+    effectLevelPin.addEventListener('mousedown', window.effects.mouseDown);
     hashtags.addEventListener('input', window.hashtags.validate);
 
     hashtags.addEventListener('focus', onHashtagsFocus);
     hashtags.addEventListener('blur', onHashtagsBlur);
     textDescription.addEventListener('focus', onTextDescriptionFocus);
     textDescription.addEventListener('blur', onTextDescriptionBlur);
+    form.addEventListener('submit', onFormSubmit);
     // uploadFile.removeEventListener('change', onUploadFileChange);
     uploadFile.blur();
   }
@@ -43,6 +54,8 @@
   function closeFormEditPhoto() {
     imgUploadOverlay.classList.add('hidden');
     uploadFile.value = '';
+    defaultStyle();
+    form.reset();
     // form.reset();
   }
 
@@ -78,5 +91,34 @@
   }
 
   uploadFile.addEventListener('change', onUploadFileChange);
+
+  // Функция отправки AJAX-запроса
+  function onFormSubmit(evt) {
+    evt.preventDefault();
+    function onSuccess() {
+      window.messages.renderMessage();
+      document.removeEventListener('keydown', onEscapePress);
+      closeFormEditPhoto();
+      setTimeout(function () {
+        window.messages.renderSuccessMessage();
+      }, TIMEOUT);
+      // defaultStyle();
+      // form.reset();
+    }
+
+    function onError() {
+      window.messages.renderMessage();
+      document.removeEventListener('keydown', onEscapePress);
+      closeFormEditPhoto();
+      window.messages.renderErrorMessage();
+    }
+
+    var formNew = new FormData(form);
+    window.load.upload(formNew, onSuccess, onError);
+  }
+
+  window.form = {
+    default: defaultStyle
+  };
 
 })();

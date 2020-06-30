@@ -117,6 +117,4 @@
   }
 
   window.load.download(onSuccess, onError);
-
-  // renderPictures(createArrayOfPictures(PICTURES_COUNT), picturesBlock);
 })();

@@ -20,21 +20,17 @@
     pictureScale -= minValue;
   }
 
-  function onScaleSmallerClick() {
-    if (pictureScale >= Scale.MIN_VALUE * 2 && pictureScale <= Scale.MAX_VALUE) {
-      changeSizeImage(Scale.MIN_VALUE);
-    }
-  }
-
-  function onScaleBiggerClick() {
-    if (pictureScale >= Scale.MIN_VALUE && pictureScale <= Scale.MAX_VALUE - Scale.MIN_VALUE) {
-      changeSizeImage(-Scale.MIN_VALUE);
-    }
-  }
-
   window.size = {
-    minusClick: onScaleSmallerClick,
-    plusClick: onScaleBiggerClick
+    minusClick: function () {
+      if (pictureScale >= Scale.MIN_VALUE * 2 && pictureScale <= Scale.MAX_VALUE) {
+        changeSizeImage(Scale.MIN_VALUE);
+      }
+    },
+    plusClick: function () {
+      if (pictureScale >= Scale.MIN_VALUE && pictureScale <= Scale.MAX_VALUE - Scale.MIN_VALUE) {
+        changeSizeImage(-Scale.MIN_VALUE);
+      }
+    }
   };
 
 })();

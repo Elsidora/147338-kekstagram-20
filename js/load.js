@@ -1,13 +1,15 @@
 'use strict';
 
 (function () {
-  var URL = 'https://javascript.pages.academy/kekstagram/data';
+  var DOWN_URL = 'https://javascript.pages.academy/kekstagram/data';
+  var UP_URL = 'https://javascript.pages.academy/kekstagram';
   var StatusCode = {
     OK: 200
   };
   var TIMEOUT = 10000;
 
-  function download(onSuccess, onError) {
+  function createXHR(url, method, onSuccess, onError, data) {
+    data = data || null;
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -27,12 +29,18 @@
 
     xhr.timeout = TIMEOUT;
 
-    xhr.open('GET', URL);
+    xhr.open(method, url);
 
-    xhr.send();
+    xhr.send(data);
   }
 
+
   window.load = {
-    download: download
+    download: function (onSuccess, onError) {
+      createXHR(DOWN_URL, 'GET', onSuccess, onError);
+    },
+    upload: function (data, onSuccess, onError) {
+      createXHR(UP_URL, 'POST', onSuccess, onError, data);
+    }
   };
 })();
