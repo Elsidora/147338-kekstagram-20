@@ -1,89 +1,11 @@
 'use strict';
 
 (function () {
-  /*
-  var PICTURES_COUNT = 25;
-
-  var Likes = {
-    COUNT_MIN: 15,
-    COUNT_MAX: 200
-  };
-
-  var Avatar = {
-    COUNT_MIN: 1,
-    COUNT_MAX: 6
-  };
-
-  var DESCRIPTIONS = [
-    'Люблю отдыхать!',
-    'Море, море, мир бездонный',
-    'Прекрасное далеко, не будь ко мне жестоко',
-    'До чего дошел прогресс!',
-    'У каждого человека внутри существует предел...',
-    'Упущенное время не вернуть. Но кто сказал вам, что оно пропало даром!'
-  ];
-
-  var USERS_MESSAGES = [
-    'Всё отлично!',
-    'В целом всё неплохо. Но не всё.',
-    'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-    'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-    'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-    'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-  ];
-
-  var NAMES = ['Богдан', 'Лукерья', 'Изяслав', 'Акулина', 'Елисей', 'Ефимия'];
-
-  function getRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
-  function getMessages(count, array) {
-    var messages = [];
-    for (var i = 0; i < count; i += 1) {
-      var firstMessage = array[getRandomNumber(0, array.length - 1)];
-      var secondMessage = array[getRandomNumber(0, array.length - 1)];
-      var listMessage = firstMessage + ' ' + secondMessage;
-
-      if (firstMessage === secondMessage) {
-        listMessage = firstMessage;
-      }
-      messages.push(listMessage);
-    }
-    return messages;
-  }
-
-  function createArrayOfComments(count) {
-    var arrComments = [];
-    for (var i = 0; i < count; i += 1) {
-      var objectComment = {
-        avatar: 'img/avatar-' + getRandomNumber(Avatar.COUNT_MIN, Avatar.COUNT_MAX) + '.svg',
-        message: getMessages(Avatar.COUNT_MIN, USERS_MESSAGES),
-        name: NAMES[getRandomNumber(0, NAMES.length - 1)]
-      };
-      arrComments.push(objectComment);
-    }
-    return arrComments;
-  }
-
-  function createArrayOfPictures(count) {
-    var arrPictures = [];
-    for (var i = 1; i <= count; i += 1) {
-      var pictureObject = {
-        url: 'photos/' + i + '.jpg',
-        description: DESCRIPTIONS[getRandomNumber(0, DESCRIPTIONS.length - 1)],
-        likes: getRandomNumber(Likes.COUNT_MIN, Likes.COUNT_MAX),
-        comments: createArrayOfComments(getRandomNumber(0, PICTURES_COUNT))
-      };
-      arrPictures.push(pictureObject);
-    }
-    return arrPictures;
-  }
-  */
-
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
   var picturesBlock = document.querySelector('.pictures');
+
+  var imgFilters = document.querySelector('.img-filters');
 
   function renderPictures(arrObjects, container) {
     var fragment = document.createDocumentFragment();
@@ -104,8 +26,90 @@
     container.appendChild(fragment);
   }
 
+  // Функция создания копии массива фотографий с сервера
+  function getDefaultPictures(pictures) {
+    return pictures.slice();
+  }
+
+  // Функция нахождения 10 случайных неповторяющихся фотографий
+  function getRandomPictures(pictures) {
+    var randomUniqueArray = window.util.getUniqueArray(0, pictures.length);
+    var randomPictures = [];
+    randomUniqueArray.forEach(function (item) {
+      return randomPictures.push(pictures[item]);
+    });
+    return randomPictures;
+  }
+
+  // Функция нахождения самых обсуждаемых фотографий (сортировка)
+  function getDiscussionPictures(pictures) {
+    var sortCommentPictures = pictures.slice();
+    sortCommentPictures.sort(function (a, b) {
+      return b.comments.length - a.comments.length;
+    });
+    return sortCommentPictures;
+  }
+
+  // Функция обработки кликов по кнопкам-фильтрам
+  function clickFilterButton(photos) {
+    var buttons = imgFilters.querySelectorAll('button');
+    var sortPictures = [];
+
+    var onButtonDefaultClick = window.debounce.debounce(function (evt) {
+      onButtonClick(getDefaultPictures, evt);
+    });
+
+    var onButtonRandomClick = window.debounce.debounce(function (evt) {
+      onButtonClick(getRandomPictures, evt);
+    });
+
+    var onButtonDiscussionClick = window.debounce.debounce(function (evt) {
+      onButtonClick(getDiscussionPictures, evt);
+    });
+
+    function onButtonClick(callback, evt) {
+      evt.preventDefault();
+      var target = evt.target;
+      if (target.type === 'button') {
+        var activeButton = imgFilters.querySelector('.img-filters__button--active');
+        activeButton.classList.remove('img-filters__button--active');
+        target.classList.add('img-filters__button--active');
+        window.util.clearGallery('.picture', picturesBlock);
+        sortPictures = callback(photos);
+        renderPictures(sortPictures, picturesBlock);
+
+      }
+    }
+
+    function addEventElement(element, elementId, elementFunction) {
+      if (element.id === elementId) {
+        element.addEventListener('click', elementFunction);
+      }
+    }
+
+    buttons.forEach(function (item) {
+      addEventElement(item, 'filter-default', onButtonDefaultClick);
+      addEventElement(item, 'filter-random', onButtonRandomClick);
+      addEventElement(item, 'filter-discussed', onButtonDiscussionClick);
+      /*
+      if (item.id === 'filter-default') {
+        item.addEventListener('click', onButtonDefaultClick);
+      }
+      if (item.id === 'filter-random') {
+        item.addEventListener('click', onButtonRandomClick);
+      }
+      if (item.id === 'filter-discussed') {
+        item.addEventListener('click', onButtonDiscussionClick);
+      }
+      */
+    });
+
+  }
+
   function onSuccess(pictures) {
     renderPictures(pictures, picturesBlock);
+    imgFilters.classList.remove('img-filters--inactive');
+    clickFilterButton(pictures);
   }
 
   function onError(errorMessage) {
