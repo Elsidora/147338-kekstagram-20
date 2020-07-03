@@ -43,7 +43,11 @@
         }
         hashtags.setCustomValidity('');
       }
-      // hashtags.setCustomValidity('');
+      if (!hashtags.validity.valid) {
+        hashtags.style.outline = '2px solid red';
+      } else {
+        hashtags.style.outline = 'none';
+      }
     }
   };
 

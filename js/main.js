@@ -91,19 +91,8 @@
       addEventElement(item, 'filter-default', onButtonDefaultClick);
       addEventElement(item, 'filter-random', onButtonRandomClick);
       addEventElement(item, 'filter-discussed', onButtonDiscussionClick);
-      /*
-      if (item.id === 'filter-default') {
-        item.addEventListener('click', onButtonDefaultClick);
-      }
-      if (item.id === 'filter-random') {
-        item.addEventListener('click', onButtonRandomClick);
-      }
-      if (item.id === 'filter-discussed') {
-        item.addEventListener('click', onButtonDiscussionClick);
-      }
-      */
-    });
 
+    });
   }
 
   function onSuccess(pictures) {

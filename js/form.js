@@ -7,7 +7,8 @@
   var form = body.querySelector('.img-upload__form');
   var uploadFile = form.querySelector('#upload-file');
   var imgUploadOverlay = form.querySelector('.img-upload__overlay');
-  var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
+  var imgPreview = imgUploadOverlay.querySelector('.img-upload__preview');
+  var imgUploadPreview = imgPreview.querySelector('.img-upload__preview img');
   var effectsRadio = imgUploadOverlay.querySelectorAll('.effects__radio');
   var imgUploadEffectLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
   var imgUploadCancel = imgUploadOverlay.querySelector('.img-upload__cancel');
@@ -17,16 +18,19 @@
   var imgUploadEffects = imgUploadOverlay.querySelector('.img-upload__effects');
   var scaleSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
   var scaleBigger = imgUploadOverlay.querySelector('.scale__control--bigger');
+  var scaleValue = imgUploadOverlay.querySelector('.scale__control--value');
 
   function onEscapePress(evt) {
     window.util.isEscapeEvent(evt, closeFormEditPhoto);
-    body.classList.remove('modal-open');
-    document.removeEventListener('keydown', onEscapePress);
   }
+
   function defaultStyle() {
-    imgUploadPreview.style = '';
+    scaleValue.value = '100%';
+    imgPreview.style = 'transform:scale(1)';
     imgUploadPreview.className = '';
     effectsRadio[0].checked = true;
+    hashtags.style = '';
+    uploadFile.value = '';
     imgUploadEffectLevel.classList.add('hidden');
   }
 
@@ -47,22 +51,35 @@
     textDescription.addEventListener('focus', onTextDescriptionFocus);
     textDescription.addEventListener('blur', onTextDescriptionBlur);
     form.addEventListener('submit', onFormSubmit);
-    // uploadFile.removeEventListener('change', onUploadFileChange);
+    uploadFile.removeEventListener('change', onUploadFileChange);
     uploadFile.blur();
   }
 
   function closeFormEditPhoto() {
     imgUploadOverlay.classList.add('hidden');
-    uploadFile.value = '';
-    defaultStyle();
     form.reset();
-    // form.reset();
+    defaultStyle();
+    document.removeEventListener('keydown', onEscapePress);
+
+    body.classList.remove('modal-open');
+    imgUploadCancel.removeEventListener('click', onImgUploadCancelClick);
+    scaleSmaller.removeEventListener('click', window.size.minusClick);
+    scaleBigger.removeEventListener('click', window.size.plusClick);
+    imgUploadEffects.removeEventListener('click', window.effects.radioClick);
+    effectLevelPin.removeEventListener('mousedown', window.effects.mouseDown);
+    hashtags.removeEventListener('input', window.hashtags.validate);
+
+    hashtags.removeEventListener('focus', onHashtagsFocus);
+    hashtags.removeEventListener('blur', onHashtagsBlur);
+    textDescription.removeEventListener('focus', onTextDescriptionFocus);
+    textDescription.removeEventListener('blur', onTextDescriptionBlur);
+    form.removeEventListener('submit', onFormSubmit);
+    uploadFile.addEventListener('change', onUploadFileChange);
   }
 
   function onImgUploadCancelClick(evt) {
     evt.preventDefault();
     closeFormEditPhoto();
-    body.classList.remove('modal-open');
   }
 
   function onTextDescriptionFocus(evt) {
@@ -102,8 +119,6 @@
       setTimeout(function () {
         window.messages.renderSuccessMessage();
       }, TIMEOUT);
-      // defaultStyle();
-      // form.reset();
     }
 
     function onError() {
